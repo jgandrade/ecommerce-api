@@ -1,0 +1,58 @@
+{
+	"info": {
+		"_postman_id": "d6c62922-78dd-4a73-b57a-a69c8f097c20",
+		"name": "Users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19369115"
+	},
+	"item": [
+		{
+			"name": "Login Request /login",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Logout Request /logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTdmN2Q0OGYyMThiNjI0MDY4ZmJjYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNTE4OTg4fQ.QphE5wglDI8mRY4MR2Ef8mbj-_pT3GjF3stfDoRspds",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Request /register",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
