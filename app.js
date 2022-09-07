@@ -21,13 +21,15 @@ db.once("open", () => console.log("Successfully connected to database"));
 
 */
 
-// REQUIRE THE ROUTES
+// REQUIRE THE ROUTES ******************
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
 
+// SETUP ROUTES ******************
 app.use('/', authRoutes);
-// SETUP ROUTES
-
+app.use('/user', userRoutes);
+app.use('/product', productRoutes);
 
 /*
 

@@ -55,11 +55,7 @@ Saved For Later <Array>[
 
 */
 const UserSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        required: [true, "First Name is required"]
-    },
-    lastName: {
+    fullName: {
         type: String,
         required: [true, "Last Name is required"]
     },

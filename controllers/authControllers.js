@@ -10,8 +10,7 @@ module.exports.register = (req, res) => {
             if (result.length === 0) {
                 let errors = [];
                 let registerUser = new User({
-                    firstName: stringMethods.capitalizeName(req.body.firstName),
-                    lastName: stringMethods.capitalizeName(req.body.lastName),
+                    fullName: stringMethods.capitalizeName(req.body.fullName),
                     emailAddress: stringMethods.validateEmail(req.body.emailAddress) ? req.body.emailAddress : errors.push({ message: "Please provide a valid email address", response: false }),
                     mobileNumber: stringMethods.validateNumber(req.body.mobileNumber) ? req.body.mobileNumber : errors.push({ message: "Please provide a valid phone number", validFormat: "11 digit number / +<area code> 10 digit number", response: false }),
                     password: bcrypt.hashSync(req.body.password, 10)
@@ -23,7 +22,6 @@ module.exports.register = (req, res) => {
                     return registerUser.save()
                         .then(userSaved => res.send({ message: "User has been registered", response: true }))
                 }
-
             } else {
                 return res.send({ message: "Duplicate Email Found. Please use another one", response: false })
             }
@@ -42,7 +40,7 @@ module.exports.login = (req, res) => {
                     if (isPasswordCorrect) {
                         let accessToken = auth.createWebToken(result);
                         let refreshToken = auth.generateAccessToken(result);
-                        result.authTokens.push(refreshToken); // PUSH REFRESH TOKENS
+                    
                         User.updateOne({ emailAddress: result.emailAddress }, { $push: { authTokens: [refreshToken] } })
                             .then(result => { console.log(result); return true }).catch(err => { console.log(err); return false });
 
