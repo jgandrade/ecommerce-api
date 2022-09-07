@@ -25,16 +25,17 @@ const ProductSchema = new mongoose.Schema({
         _id: false,
         orderId: {
             type: String,
-            default: () => {
-                let orderNumber = [];
-                for (let i = 1; i <= 17; i++) {
-                    let randomNumber = Math.floor(Math.random() * 10);
-                    orderNumber.push(randomNumber);
-                }
-                return "OD" + orderNumber.join("");
-            }
+            required: [true, "Order Id is required"]
         },
         userId: {
+            type: String,
+            required: [true, "User Id is required"]
+        },
+        billingName: {
+            type: String,
+            required: [true, "User Id is required"]
+        },
+        billingAddress: {
             type: String,
             required: [true, "User Id is required"]
         },

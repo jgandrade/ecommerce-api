@@ -1,58 +1,5 @@
 const mongoose = require('mongoose');
-/*
 
-User Id <GENERATED>
-First Name <String>
-Last Name <String>
-Email Address <String>
-Mobile Number <String>
-Password <String>
-Is Admin <Boolean>
-Auth Tokens <Array> [
-
-]
-Cart <Array>[
-{
-   Cart Number <Number>
-   Product Id <String>
-   Product Name <String>
-   Product Description <String>
-   Product Stock <String>
-   Product Price <Number>
-   Quantity <Number>
-}
-]
-
-Orders <Array>[
-{
-   Order Id <String>
-   Product Id <String>
-   Quantity <Number>
-   PaymentMethod <Object>
-   Placed On <Date>
-   isDelivered <Boolean>
-}
-]
-
-Wallet <Array>[
-{
-   Card Type <String>
-   Card Number <String>
-   Name on Card <String>
-   Expiration Date <String>
-}
-]
-
-
-Saved For Later <Array>[
-{
-   Favorites Id <String>
-   Product Id <String>
-}
-]
-
-
-*/
 const UserSchema = new mongoose.Schema({
     fullName: {
         type: String,
@@ -97,9 +44,17 @@ const UserSchema = new mongoose.Schema({
                 type: String,
                 required: [true, "Product Id is required"]
             },
+            productName: {
+                type: String,
+                required: [true, "Product Id is required"]
+            },
             quantity: {
                 type: Number,
                 required: [true, "Quantity of 1 is required"]
+            },
+            isReadyToCheckOut: {
+                type: Boolean,
+                default: true
             },
             addedOn: {
                 type: Date,
@@ -109,11 +64,23 @@ const UserSchema = new mongoose.Schema({
     ],
     userOrders: [
         {
+            _id: false,
             orderId: {
                 type: String,
-                required: [true, "Order Id is required"]
+                default: () => {
+                    let orderNumber = [];
+                    for (let i = 1; i <= 17; i++) {
+                        let randomNumber = Math.floor(Math.random() * 10);
+                        orderNumber.push(randomNumber);
+                    }
+                    return "OD" + orderNumber.join("");
+                }
             },
             productId: {
+                type: String,
+                required: [true, "Product Id is required"]
+            },
+            productName: {
                 type: String,
                 required: [true, "Product Id is required"]
             },
@@ -121,14 +88,33 @@ const UserSchema = new mongoose.Schema({
                 type: Number,
                 required: [true, "Quantity is required"]
             },
+            address: {
+                type: String,
+                required: [true, "Address is required"]
+            },
             orderedOn: {
                 type: Date,
                 default: new Date()
             }
         }
     ],
+    defaultAddress: {
+        type: Number,
+        default: 0
+    },
+    addresses: [
+        {
+            _id: false,
+            street: String,
+            city: String,
+            state: String,
+            zip: Number,
+            country: String,
+        }
+    ],
     savedForLater: [
         {
+            _id: false,
             saveId: {
                 type: Number,
                 required: [true, "Save Id is required"]
