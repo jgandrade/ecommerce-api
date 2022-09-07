@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
                         let randomNumber = Math.floor(Math.random() * 10);
                         cartNumber.push(randomNumber);
                     }
-                    return "C" + cartNumber.join("");
+                    return cartNumber.join("");
                 }
             },
             productId: {

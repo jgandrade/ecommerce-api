@@ -3,11 +3,13 @@ const User = require('../models/User');
 const stringMethods = require('./stringMethods');
 const bcrypt = require("bcrypt");
 const auth = require("../auth");
+
 /*
 
     *****************          USER CART PROFILE CONTROLLERS             ************************
 
 */
+
 module.exports.addToCart = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     // Check if there is a body 
@@ -26,7 +28,7 @@ module.exports.addToCart = async (req, res) => {
         quantity: req.body.quantity
     }
 
-    User.findById(userData.id)
+    return User.findById(userData.id)
         .then(user => {
             let indexExist;
             let isProductExist = []; // INITIALIZE ARRAY OF TRUTHS
@@ -59,10 +61,9 @@ module.exports.addToCart = async (req, res) => {
                     .then(result => res.send({ message: "Cart updated", response: true }))
                     .catch(err => res.send({ message: "Error updating Cart", error: err, response: false }));
             } else {
-                if (product.productStocks - req.body.quantity <= 0) {
+                if (product.productStocks - req.body.quantity < 0) {
                     return res.send({ message: `No available stocks left or quantity exceeded remaining stocks. Remaining Stocks if checkedOut: ${product.productStocks - req.body.quantity}`, response: false });
                 }
-                console.log(cartData);
                 user.userCart.push(cartData);
 
                 return user.save()
@@ -73,9 +74,17 @@ module.exports.addToCart = async (req, res) => {
         .catch(err => res.send({ message: "User ID Not Found", error: err, response: false }))
 }
 
-module.exports.checkOut = async (req, res) => {
+module.exports.modifyCartQuantity = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     User.findById(userData.id)
+        .then(user => { 
+            
+        })
+}
+
+module.exports.checkOut = async (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    return User.findById(userData.id)
         .then(user => {
             let isAddressExist = user.addresses.length > 0;
             let isCartNotEmpty = user.userCart.length > 0
@@ -110,26 +119,32 @@ module.exports.checkOut = async (req, res) => {
 
                 user.save()
                     .then(result => {
-                        user.userOrders.forEach(e => {
+                        let errors = [];
+                        let userOrders = [...user.userOrders];
+                        userOrders.forEach((e, i) => {
                             Product.findById(e.productId)
                                 .then(product => {
-                                    product.productOrders.push({
-                                        orderId: e.orderId,
-                                        userId: userData.id,
-                                        quantity: e.quantity,
-                                        billingName: user.fullName,
-                                        billingAddress: address,
-                                        totalPrice: e.totalPrice
-                                    });
-
-                                    product.productStocks -= e.quantity;
-
-                                    product.save().then(result => result).catch(err => err);
+                                    if (product.productStocks >= e.quantity) {
+                                        product.productOrders.push({
+                                            orderId: e.orderId,
+                                            userId: userData.id,
+                                            quantity: e.quantity,
+                                            billingName: user.fullName,
+                                            billingAddress: address,
+                                            totalPrice: e.totalPrice
+                                        });
+                                        product.productStocks -= e.quantity;
+                                        product.save().then(result => result).catch(err => err);
+                                    } else {
+                                        errors.push({ message: `User Order Quantity of ${user.userOrders[i].quantity} is greater than stocks of product. Your order will now be deleted. Please order another one.` })
+                                        user.userOrders.splice(i, 1);
+                                        user.save().then(result => result).catch(err => err);
+                                    }
                                 })
                                 .catch(err => err);
                         });
 
-                        return res.send({ message: "Checkout Successful", response: true });
+                        return res.send({ message: "Checkout Successful", errors: errors, response: true });
                     })
                     .catch(err => res.send({ message: "Error Checking out", error: err, response: false }));
             } else {
@@ -137,8 +152,7 @@ module.exports.checkOut = async (req, res) => {
             }
         }).catch(err => {
             return res.send({ message: "User data not found in token", response: false });
-        })
-        ;
+        });
 }
 
 /*
@@ -147,9 +161,16 @@ module.exports.checkOut = async (req, res) => {
  
 */
 
+module.exports.getUserProfile = (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    return User.findById(userData.id)
+        .then(user => res.send({ userProfile: { ...user._doc, password: "******" }, response: true, message: "Profile retrieved" }))
+        .catch(err => res.send({ message: "User Data not acquired in Token", response: false, error: err.message }));
+}
+
 module.exports.changeName = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
-    User.findByIdAndUpdate(userData.id, { fullName: stringMethods.capitalizeName(req.body.fullName) }, { new: true })
+    return User.findByIdAndUpdate(userData.id, { fullName: stringMethods.capitalizeName(req.body.fullName) }, { new: true })
         .then(changeName => {
             return res.send({ message: 'Updated', nameUpdatedTo: changeName.fullName, response: true });
         }
@@ -160,7 +181,7 @@ module.exports.changeName = (req, res) => {
 // IMPROVE ALGO OF THIS
 module.exports.changeEmail = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
-    User.findByIdAndUpdate(userData.id, { emailAddress: req.body.emailAddress }, { new: true })
+    return User.findByIdAndUpdate(userData.id, { emailAddress: req.body.emailAddress }, { new: true })
         .then(changeEmail => {
             return res.send({ message: 'Updated', emailUpdatedTo: changeEmail.emailAddress, response: true });
         }
@@ -171,7 +192,7 @@ module.exports.changeEmail = (req, res) => {
 // IMPROVE ALGO OF THIS
 module.exports.changePassword = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
-    User.findByIdAndUpdate(userData.id, { password: bcrypt.hashSync(req.body.password, 10) }, { new: true })
+    return User.findByIdAndUpdate(userData.id, { password: bcrypt.hashSync(req.body.password, 10) }, { new: true })
         .then(changeEmail => {
             return res.send({ message: 'Updated', passwordUpdatedTo: "**********", response: true });
         }
@@ -181,7 +202,7 @@ module.exports.changePassword = (req, res) => {
 
 module.exports.changeNumber = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
-    User.findByIdAndUpdate(userData.id, { mobileNumber: req.body.mobileNumber }, { new: true })
+    return User.findByIdAndUpdate(userData.id, { mobileNumber: req.body.mobileNumber }, { new: true })
         .then(changeNumber => {
             return res.send({ message: 'Updated', numberUpdatedTo: changeNumber.mobileNumber, response: true });
         }

@@ -3,7 +3,7 @@ const auth = require('../auth');
 const express = require('express');
 const router = express.Router();
 
-
+router.get('/profile', auth.authenticateToken, userControllers.getUserProfile);
 router.patch('/name/set', auth.authenticateToken, userControllers.changeName);
 router.patch('/email/set', auth.authenticateToken, userControllers.changeEmail);
 router.patch('/password/set', auth.authenticateToken, userControllers.changePassword);
