@@ -52,6 +52,10 @@ const UserSchema = new mongoose.Schema({
                 type: Number,
                 required: [true, "Quantity of 1 is required"]
             },
+            totalPrice: {
+                type: Number,
+                required: [true, "Total Price is required"]
+            },
             isReadyToCheckOut: {
                 type: Boolean,
                 default: true
@@ -91,6 +95,10 @@ const UserSchema = new mongoose.Schema({
             address: {
                 type: String,
                 required: [true, "Address is required"]
+            },
+            totalPrice: {
+                type: Number,
+                required: [true, "Total Price is required"]
             },
             orderedOn: {
                 type: Date,

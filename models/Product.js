@@ -33,11 +33,19 @@ const ProductSchema = new mongoose.Schema({
         },
         billingName: {
             type: String,
-            required: [true, "User Id is required"]
+            required: [true, "Billing Name is required"]
         },
         billingAddress: {
             type: String,
-            required: [true, "User Id is required"]
+            required: [true, "Billing Address is required"]
+        },
+        totalPrice: {
+            type: Number,
+            required: [true, "Total Price is required"]
+        },
+        quantity: {
+            type: Number,
+            required: [true, "Quantity is required"]
         },
         orderCreatedOn: {
             type: Date,

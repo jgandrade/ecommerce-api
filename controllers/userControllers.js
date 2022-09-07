@@ -10,26 +10,24 @@ const auth = require("../auth");
 */
 module.exports.addToCart = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
+    // Check if there is a body 
+    if (req.body.productId == null) {
+        return res.send({ message: "Error Product Id not defined", response: false });
+    }
+
     let product = await Product.findById(req.body.productId)
         .then(result => result)
         .catch(err => ({ message: "No Product Id Found", error: err }));
 
-    let cartData; // Declare cartData
-
-    // Check if there is a body 
-    if (req.body.productId == null) {
-        return res.send({ message: "Error Product Id not defined", response: false });
-    } else {
-        cartData = {
-            productId: product.id,
-            productName: product.productName,
-            quantity: req.body.quantity
-        }
+    let cartData = {
+        productId: product.id,
+        productName: product.productName,
+        totalPrice: product.productPrice * req.body.quantity,
+        quantity: req.body.quantity
     }
 
     User.findById(userData.id)
         .then(user => {
-
             let indexExist;
             let isProductExist = []; // INITIALIZE ARRAY OF TRUTHS
 
@@ -45,14 +43,18 @@ module.exports.addToCart = async (req, res) => {
             } else {
                 isProductExist = false;
             }
+
+            // Check if Product Exist or Not
             if (isProductExist.length > 0) {
                 isProductExist = isProductExist.some(e => e == true);
             } else {
                 isProductExist = false;
             }
 
+            // Do if Product Exist
             if (isProductExist) {
                 user.userCart[indexExist].quantity += req.body.quantity;
+                user.userCart[indexExist].totalPrice += cartData.totalPrice;
                 return user.save()
                     .then(result => res.send({ message: "Cart updated", response: true }))
                     .catch(err => res.send({ message: "Error updating Cart", error: err, response: false }));
@@ -60,7 +62,9 @@ module.exports.addToCart = async (req, res) => {
                 if (product.productStocks - req.body.quantity <= 0) {
                     return res.send({ message: `No available stocks left or quantity exceeded remaining stocks. Remaining Stocks if checkedOut: ${product.productStocks - req.body.quantity}`, response: false });
                 }
+                console.log(cartData);
                 user.userCart.push(cartData);
+
                 return user.save()
                     .then(result => res.send({ message: "Added to Cart", response: true }))
                     .catch(err => res.send({ message: "Error adding to Cart", error: err, response: false }));
@@ -75,12 +79,13 @@ module.exports.checkOut = async (req, res) => {
         .then(user => {
             let isAddressExist = user.addresses.length > 0;
             let isCartNotEmpty = user.userCart.length > 0
-            let address = user.addresses[user.defaultAddress];
-
-            // STRINGIFY ADDRESS ARRAY OF OBJECTS INTO ONE
-            address = stringMethods.capitalizeName(`${address.street} ${address.city} ${address.state} ${address.zip} ${address.country}`);
 
             if (isAddressExist && isCartNotEmpty) {
+                let address = user.addresses[user.defaultAddress];
+
+                // STRINGIFY ADDRESS ARRAY OF OBJECTS INTO ONE
+                address = stringMethods.capitalizeName(`${address.street} ${address.city} ${address.state} ${address.zip} ${address.country}`);
+
                 let toCheckOutArr = user.userCart.filter(e => e.isReadyToCheckOut === true);
                 toCheckOutArr.forEach(e => {
                     let cartNumber = e.cartNumber;
@@ -88,6 +93,7 @@ module.exports.checkOut = async (req, res) => {
                         productId: e.productId,
                         quantity: e.quantity,
                         productName: e.productName,
+                        totalPrice: e.totalPrice,
                         address: address
                     });
 
@@ -110,8 +116,10 @@ module.exports.checkOut = async (req, res) => {
                                     product.productOrders.push({
                                         orderId: e.orderId,
                                         userId: userData.id,
+                                        quantity: e.quantity,
                                         billingName: user.fullName,
                                         billingAddress: address,
+                                        totalPrice: e.totalPrice
                                     });
 
                                     product.productStocks -= e.quantity;
@@ -124,20 +132,19 @@ module.exports.checkOut = async (req, res) => {
                         return res.send({ message: "Checkout Successful", response: true });
                     })
                     .catch(err => res.send({ message: "Error Checking out", error: err, response: false }));
-
             } else {
                 return res.send({ message: "Please add Address to your account or place a product on your Cart", error: { address: isAddressExist, cart: isCartNotEmpty }, response: false });
             }
         }).catch(err => {
-            return res.send({ message: err, response: false })
-        }
-        )
+            return res.send({ message: "User data not found in token", response: false });
+        })
+        ;
 }
 
 /*
-
+ 
     *****************          USER PROFILE CONTROLLERS             ************************
-
+ 
 */
 
 module.exports.changeName = (req, res) => {
