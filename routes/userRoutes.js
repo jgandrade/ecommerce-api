@@ -8,5 +8,6 @@ router.patch('/name/set', auth.authenticateToken, userControllers.changeName);
 router.patch('/email/set', auth.authenticateToken, userControllers.changeEmail);
 router.patch('/password/set', auth.authenticateToken, userControllers.changePassword);
 router.patch('/mobilenumber/set', auth.authenticateToken, userControllers.changeNumber);
+router.post('/addToCart', auth.authenticateToken, userControllers.addToCart);
 
 module.exports = router;

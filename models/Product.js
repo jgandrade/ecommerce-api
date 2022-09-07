@@ -22,9 +22,17 @@ const ProductSchema = new mongoose.Schema({
         default: new Date()
     },
     productOrders: [{
+        _id: false,
         orderId: {
-            type: Number,
-            required: [true, "Order Id is required"]
+            type: String,
+            default: () => {
+                let orderNumber = [];
+                for (let i = 1; i <= 17; i++) {
+                    let randomNumber = Math.floor(Math.random() * 10);
+                    orderNumber.push(randomNumber);
+                }
+                return "OD" + orderNumber.join("");
+            }
         },
         userId: {
             type: String,

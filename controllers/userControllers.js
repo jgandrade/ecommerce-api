@@ -8,19 +8,46 @@ const auth = require("../auth");
     *****************          USER CART PROFILE CONTROLLERS             ************************
 
 */
-
 module.exports.addToCart = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     let product = await Product.findById(req.body.productId)
         .then(result => result)
-        .catch();
-    let data = {
 
+    let cartData = {
+        productId: product.id,
+        quantity: req.body.quantity
     }
 
-    User.findByIdAndUpdate(userData.id, { $push: { userCart: [{ ...cartData }] } })
-}
+    User.findById(userData.id)
+        .then(user => {
+            let indexExist;
+            let isProductExist
+            if (user.userCart.length > 0) {
+                isProductExist = user.userCart.map((e, i) => {
+                    if (product.id === e.productId) {
+                        indexExist = i
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            } else {
+                isProductExist = false;
+            }
 
+            if (isProductExist) {
+                user.userCart[indexExist].quantity += req.body.quantity;
+                return user.save()
+                    .then(result => res.send({ message: "Cart updated", response: true }))
+                    .catch(err => res.send({ message: "Error updating Cart", error: err, response: false }));
+            } else {
+                user.userCart.push(cartData);
+                return user.save()
+                    .then(result => res.send({ message: "Added to Cart", response: true }))
+                    .catch(err => res.send({ message: "Error adding to Cart", error: err, response: false }));
+            }
+        });
+}
 
 /*
 

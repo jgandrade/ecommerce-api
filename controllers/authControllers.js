@@ -39,12 +39,12 @@ module.exports.login = (req, res) => {
                     const isPasswordCorrect = bcrypt.compareSync(req.body.password, result.password);
                     if (isPasswordCorrect) {
                         let accessToken = auth.createWebToken(result);
-                        let refreshToken = auth.generateAccessToken(result);
                     
-                        User.updateOne({ emailAddress: result.emailAddress }, { $push: { authTokens: [refreshToken] } })
+                        User.updateOne({ emailAddress: result.emailAddress }, { $push: { authTokens: [accessToken] } })
                             .then(result => { console.log(result); return true }).catch(err => { console.log(err); return false });
 
-                        return res.send({ accessToken: accessToken, refreshToken: refreshToken, response: true, status: "logged-in" });
+                        return res.send({ accessToken: accessToken, response: true, status: "logged-in" });
+                        
                     } else {
                         return res.send({ error: "Password is incorrect", response: false });
                     }

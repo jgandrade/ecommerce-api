@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 /*
 
 User Id <GENERATED>
@@ -82,8 +81,17 @@ const UserSchema = new mongoose.Schema({
     authTokens: [],
     userCart: [
         {
+            _id: false,
             cartNumber: {
-                type: Number,
+                type: String,
+                default: () => {
+                    let cartNumber = [];
+                    for (let i = 1; i <= 6; i++) {
+                        let randomNumber = Math.floor(Math.random() * 10);
+                        cartNumber.push(randomNumber);
+                    }
+                    return "C" + cartNumber.join("");
+                }
             },
             productId: {
                 type: String,
