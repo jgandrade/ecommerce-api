@@ -89,7 +89,7 @@ body:
 */
 module.exports.modifyCartQuantity = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
-    User.findById(userData.id)
+    return User.findById(userData.id)
         .then(user => {
             user.userCart.forEach((e, i) => {
                 if (e.cartNumber === req.body.cartNumber) {
@@ -100,10 +100,35 @@ module.exports.modifyCartQuantity = async (req, res) => {
                     return user.save()
                         .then(result => res.send({ message: "Updated", response: true }))
                         .catch(err => res.send({ message: "Not Updated", response: false }));
+                } else {
+                    if (i === user.userCart.length - 1) {
+                        return res.send({ message: "Not Updated. Cart Number provided does not exist in the current user.", response: false })
+                    }
                 }
             });
         })
 }
+
+module.exports.modifyReadyToCheckOutCart = (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    return User.findById(userData.id)
+        .then(user => {
+            user.userCart.forEach((e, i) => {
+                if (e.cartNumber === req.body.cartNumber) {
+                    user.userCart[i].isReadyToCheckOut = !user.userCart[i].isReadyToCheckOut;
+
+                    return user.save()
+                        .then(result => res.send({ message: "Updated", response: true }))
+                        .catch(err => res.send({ message: "Not Updated", response: false }));
+                } else {
+                    if (i === user.userCart.length - 1) {
+                        return res.send({ message: "Not Updated. Cart Number provided does not exist in the current user.", response: false })
+                    }
+                }
+            });
+        })
+}
+
 
 module.exports.checkOut = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
@@ -142,9 +167,9 @@ module.exports.checkOut = async (req, res) => {
 
                 let checkOutArrLength = toCheckOutArr.length;
 
+                let errors = [];
                 user.save()
                     .then(result => {
-                        let errors = [];
                         let userOrders = [...user.userOrders];
                         let newUserOrders = [];
                         for (let i = userOrders.length - checkOutArrLength; i < userOrders.length; i++) {
@@ -172,9 +197,11 @@ module.exports.checkOut = async (req, res) => {
                                 })
                                 .catch(err => err);
                         });
-                        return res.send({ message: "Checked out! But if there are errors please see errors.", response: true });
                     })
                     .catch(err => res.send({ message: "Error Checking out", error: err, response: false }));
+
+                return res.send({ message: "Checked out! But if there are errors please see errors.", errors: errors, response: true });
+
             } else {
                 return res.send({ message: "Please add Address to your account or place a product on your Cart", error: { address: isAddressExist, cart: isCartNotEmpty }, response: false });
             }
@@ -182,6 +209,7 @@ module.exports.checkOut = async (req, res) => {
             return res.send({ message: "User data not found in token", response: false });
         });
 }
+
 /*
  
     *****************          USER PROFILE CONTROLLERS             ************************
@@ -237,5 +265,6 @@ module.exports.changeNumber = (req, res) => {
 }
 
 module.exports.addAddress = (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
 
 }

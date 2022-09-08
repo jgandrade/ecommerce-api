@@ -11,5 +11,6 @@ router.patch('/mobilenumber/set', auth.authenticateToken, userControllers.change
 router.post('/addToCart', auth.authenticateToken, userControllers.addToCart);
 router.post('/checkout', auth.authenticateToken, userControllers.checkOut);
 router.patch('/cart/updateQuantity', auth.authenticateToken, userControllers.modifyCartQuantity);
+router.patch('/cart/updateCheckout', auth.authenticateToken, userControllers.modifyReadyToCheckOutCart);
 
 module.exports = router;
