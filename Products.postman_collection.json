@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Get All Products /product/listAll",
+			"name": "Get All Products",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -48,7 +48,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Active Products /product/lists",
+			"name": "Get Active Products",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -89,7 +89,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Product /product/add",
+			"name": "Add Product",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -127,7 +127,7 @@
 			"response": []
 		},
 		{
-			"name": "Remove Product /product/remove",
+			"name": "Remove Product",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -165,7 +165,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Specific Product /product/getproduct",
+			"name": "Get Specific Product",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -206,7 +206,7 @@
 			"response": []
 		},
 		{
-			"name": "Update Product Price Stocks /product/update/price_stocks",
+			"name": "Update Product Price Stocks",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -245,7 +245,7 @@
 			"response": []
 		},
 		{
-			"name": "Update Product Price Stocks /product/update/name_description",
+			"name": "Update Product Price Stocks",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -280,6 +280,14 @@
 						"price_stocks"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Product And Display All",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}

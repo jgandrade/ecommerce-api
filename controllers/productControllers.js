@@ -218,7 +218,7 @@ module.exports.searchProduct = async (req, res) => {
 
 
     // FILTER ALL PRODUCTS THAT HAS A DISTANCE LESS THAN 6
-    productsMap = productsMap.filter((e, i) => results[i].score <= 6);
+    productsMap = productsMap.filter((e, i) => results[i].score <= 5);
 
     let searchResults = [];
     for (let i = 0; i < productsMap.length; i++) {

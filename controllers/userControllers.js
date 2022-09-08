@@ -210,6 +210,14 @@ module.exports.checkOut = async (req, res) => {
                         address: address
                     });
 
+                    let cartNumber = e.cartNumber;
+                    let cartIndexToRemove; // GET THE INDEX TO BE DELETED IN CART
+                    user.userCart.forEach((el, index) => {
+                        if (el.cartNumber === cartNumber) {
+                            cartIndexToRemove = index;
+                        }
+                    });
+                    user.userCart.splice(cartIndexToRemove, 1); // DELETE FROM CART
 
                 })
 
@@ -224,10 +232,10 @@ module.exports.checkOut = async (req, res) => {
                         }
                         let errors = [];
                         let success = [];
+                        console.log(newUserOrders)
                         newUserOrders.forEach((e, i) => {
                             Product.findById(e.productId)
                                 .then(product => {
-
                                     if (product.productStocks >= e.quantity) {
                                         product.productOrders.push({
                                             orderId: e.orderId,
@@ -238,26 +246,13 @@ module.exports.checkOut = async (req, res) => {
                                             totalPrice: e.totalPrice
                                         });
                                         product.productStocks -= e.quantity;
-
-                                        let cartNumber = e.cartNumber;
-                                        let cartIndexToRemove; // GET THE INDEX TO BE DELETED IN CART
-
-                                        user.userCart.forEach((el, i) => {
-                                            if (el.cartNumber === cartNumber) {
-                                                cartIndexToRemove = i;
-                                            }
-                                        });
-
-                                        user.userCart.splice(cartIndexToRemove, 1); // DELETE FROM CART
-
                                         product.save().then(result => result).catch(err => err);
-                                        user.save().then(result => result).catch(err => err);
                                         success.push({ successOnProductId: e.productId });
 
                                     } else {
                                         user.userOrders.splice(userOrders.length - checkOutArrLength + i, 1);
-                                        user.save().then(result => result).catch(err => err);
                                         errors.push({ errorOnProductId: e.productId });
+                                        user.save().then(result => result).catch(err => err);
                                     }
 
                                     if (errors.length > 0 && success.length == 0) {
@@ -267,8 +262,9 @@ module.exports.checkOut = async (req, res) => {
                                         return res.send({ message: "Some had errors placing order", success: success, errors: errors, response: true });
                                     }
                                     if (errors.length == 0 && success.length > 0) {
-                                        return res.send({ message: "Successful Placing All Orders", success: success, response: true });
+                                        return res.send({ message: "Successful Placing All Orders", response: true });
                                     }
+
                                 })
                                 .catch(err => err);
                         });

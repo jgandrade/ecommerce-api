@@ -10,7 +10,7 @@
 			"name": "User Authentication Requests",
 			"item": [
 				{
-					"name": "Register Request /register",
+					"name": "Register Request",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -37,7 +37,7 @@
 					"response": []
 				},
 				{
-					"name": "Admin Login Request /login",
+					"name": "Admin Login Request",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -64,7 +64,7 @@
 					"response": []
 				},
 				{
-					"name": "Not Admin Login Request /login",
+					"name": "Not Admin Login Request",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -85,38 +85,6 @@
 							"port": "3000",
 							"path": [
 								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logout Request /logout",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTdmN2Q0OGYyMThiNjI0MDY4ZmJjYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNTE4OTg4fQ.QphE5wglDI8mRY4MR2Ef8mbj-_pT3GjF3stfDoRspds",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "localhost:3000/logout",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"logout"
 							]
 						}
 					},
@@ -406,7 +374,7 @@
 			"name": "User Cart Requests",
 			"item": [
 				{
-					"name": "Add To Cart /user/addToCart",
+					"name": "Add To Cart",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -444,7 +412,7 @@
 					"response": []
 				},
 				{
-					"name": "Proceed To Checkout /user/checkout",
+					"name": "Proceed To Checkout",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -482,7 +450,7 @@
 					"response": []
 				},
 				{
-					"name": "Modify Cart Quantity /user/cart/modifyQuantity",
+					"name": "Modify Cart Quantity",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -521,7 +489,7 @@
 					"response": []
 				},
 				{
-					"name": "Modify Cart CheckOut /user/cart/updateCheckout",
+					"name": "Modify Cart isReadyForCheckOut",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -560,7 +528,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete Cart",
+					"name": "Delete Specific Cart",
 					"request": {
 						"auth": {
 							"type": "bearer",
