@@ -164,6 +164,10 @@ module.exports.checkOut = async (req, res) => {
 
     let productIds = user.userCart.map(e => e.productId);
 
+    if (user.userCart.length == 0) {
+        return res.send({ message: "Add something on your cart to checkout" });
+    }
+    
     let address;
     if (user.addresses.length > 0) {
         address = user.addresses[0];
@@ -183,11 +187,12 @@ module.exports.checkOut = async (req, res) => {
     });
 
     dataToPush.forEach(e => {
-        user.userOrders.push(e);
+        user.userOrders.unshift(e);
     })
 
     let success = [];
     let errors = [];
+
     for (let i = 0; i < productIds.length; i++) {
         let product = await Product.findById(productIds[i]).then(results => results);
 
@@ -203,10 +208,10 @@ module.exports.checkOut = async (req, res) => {
         if (product.productStocks >= user.userOrders[i].quantity) {
             product.productStocks = product.productStocks - user.userOrders[i].quantity;
             product.productOrders.push(arrayToPushProduct);
-            success.push({ cartNumberSuccessfullyOrdered: user.userCart[i].cartNumber })
+            success.push({ message: "Success", orderId: user.userOrders[i].orderId, orderName: product.productName });
             user.userCart.shift();
         } else {
-            errors.push({ message: "Change quantity of user cart. See cart details on next key.", cartNumber: user.userCart[i].cartNumber })
+            errors.push({ message: "Change quantity of user cart. See cart details on your cart." })
             user.userOrders.splice(i, 1);
             continue;
         }
