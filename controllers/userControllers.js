@@ -146,7 +146,6 @@ module.exports.checkOut = async (req, res) => {
 
                 let toCheckOutArr = user.userCart.filter(e => e.isReadyToCheckOut === true);
                 toCheckOutArr.forEach(e => {
-                    let cartNumber = e.cartNumber;
                     user.userOrders.push({
                         productId: e.productId,
                         quantity: e.quantity,
@@ -155,20 +154,11 @@ module.exports.checkOut = async (req, res) => {
                         address: address
                     });
 
-                    let cartIndexToRemove; // GET THE INDEX TO BE DELETED IN CART
 
-                    user.userCart.forEach((el, i) => {
-                        if (el.cartNumber === cartNumber) {
-                            cartIndexToRemove = i;
-                        }
-                    });
-
-                    user.userCart.splice(cartIndexToRemove, 1); // DELETE FROM CART
                 })
 
                 let checkOutArrLength = toCheckOutArr.length;
 
-                let errors = [];
                 user.save()
                     .then(result => {
                         let userOrders = [...user.userOrders];
@@ -176,9 +166,12 @@ module.exports.checkOut = async (req, res) => {
                         for (let i = userOrders.length - checkOutArrLength; i < userOrders.length; i++) {
                             newUserOrders.push(userOrders[i]);
                         }
+                        let errors = [];
+                        let success = [];
                         newUserOrders.forEach((e, i) => {
                             Product.findById(e.productId)
                                 .then(product => {
+
                                     if (product.productStocks >= e.quantity) {
                                         product.productOrders.push({
                                             orderId: e.orderId,
@@ -189,11 +182,36 @@ module.exports.checkOut = async (req, res) => {
                                             totalPrice: e.totalPrice
                                         });
                                         product.productStocks -= e.quantity;
+
+                                        let cartNumber = e.cartNumber;
+                                        let cartIndexToRemove; // GET THE INDEX TO BE DELETED IN CART
+
+                                        user.userCart.forEach((el, i) => {
+                                            if (el.cartNumber === cartNumber) {
+                                                cartIndexToRemove = i;
+                                            }
+                                        });
+
+                                        user.userCart.splice(cartIndexToRemove, 1); // DELETE FROM CART
+
                                         product.save().then(result => result).catch(err => err);
+                                        user.save().then(result => result).catch(err => err);
+                                        success.push({ successOnProductId: e.productId });
+
                                     } else {
-                                        errors.push({ message: `User Order Quantity is greater than stocks of product. Your order will now be removed. Please order another one.` });
                                         user.userOrders.splice(userOrders.length - checkOutArrLength + i, 1);
                                         user.save().then(result => result).catch(err => err);
+                                        errors.push({ errorOnProductId: e.productId });
+                                    }
+
+                                    if (errors.length > 0 && success.length == 0) {
+                                        return res.send({ message: "Error placing order", errors: errors, response: false });
+                                    }
+                                    if (errors.length > 0 && success.length > 0) {
+                                        return res.send({ message: "Some had errors placing order", success: success, errors: errors, response: true });
+                                    }
+                                    if (errors.length == 0 && success.length > 0) {
+                                        return res.send({ message: "Successful Placing All Orders", success: success, response: true });
                                     }
                                 })
                                 .catch(err => err);
@@ -201,7 +219,7 @@ module.exports.checkOut = async (req, res) => {
                     })
                     .catch(err => res.send({ message: "Error Checking out", error: err, response: false }));
 
-                return res.send({ message: "Checked out! But if there are errors please see errors.", errors: errors, response: true });
+
 
             } else {
                 return res.send({ message: "Please add Address to your account or place a product on your Cart", error: { address: isAddressExist, cart: isCartNotEmpty }, response: false });
@@ -269,7 +287,7 @@ module.exports.updateAddress = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findById(userData.id)
         .then(user => {
-            
+
             if (user.addresses.length > 0) {
                 user.addresses[0].street = stringMethods.capitalizeName(req.body.street);
                 user.addresses[0].city = stringMethods.capitalizeName(req.body.city);
