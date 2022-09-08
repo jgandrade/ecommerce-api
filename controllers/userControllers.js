@@ -35,7 +35,7 @@ module.exports.addToCart = async (req, res) => {
         quantity: req.body.quantity
     }
 
-    return User.findById(userData.id)
+    User.findById(userData.id)
         .then(user => {
             let indexExist;
             let isProductExist = []; // INITIALIZE ARRAY OF TRUTHS
@@ -130,6 +130,26 @@ module.exports.modifyReadyToCheckOutCart = (req, res) => {
         })
 }
 
+module.exports.deleteCart = (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    User.findById(userData.id)
+        .then(user => {
+            let cart = [...user.userCart];
+            console.log(cart)
+            cart.map((e, i) => {
+                console.log(e.cartNumber)
+                if (e.cartNumber === req.body.cartNumber) {
+                    user.userCart.splice(i, 1);
+                    user.save()
+                        .then(result => res.send({ message: "Cart Deleted", response: true }))
+                        .catch(err => res.send({ message: "Not Deleted", response: false }));
+                } else {
+                    return res.send({ message: "Cartnumber provided does not exist in user cart.", response: false })
+                }
+            });
+        })
+        .catch(err => res.send({ message: err.message, response: false }));
+}
 
 module.exports.checkOut = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
