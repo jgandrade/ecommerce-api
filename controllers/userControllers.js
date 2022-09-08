@@ -9,7 +9,13 @@ const auth = require("../auth");
     *****************          USER CART PROFILE CONTROLLERS             ************************
 
 */
-
+// ADD TO CART 
+/*
+ADDS A PRODUCT TO USER CART
+body:
+    productId: productId_here
+    quantity:  user_define_quantity
+*/
 module.exports.addToCart = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     // Check if there is a body 
@@ -76,10 +82,10 @@ module.exports.addToCart = async (req, res) => {
 
 // MODIFY CART QUANTITY 
 /*
-
+MODIFIES USER CART QUANTITY
+body:
     quantity: user_define_quantity
     cartNumber: cartNumber_here
-
 */
 module.exports.modifyCartQuantity = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
@@ -159,14 +165,14 @@ module.exports.checkOut = async (req, res) => {
                                         product.productStocks -= e.quantity;
                                         product.save().then(result => result).catch(err => err);
                                     } else {
-                                        errors.push({ message: `User Order Quantity of ${user.userOrders[i].quantity} is greater than stocks of product. Your order will now be deleted. Please order another one.` })
+                                        errors.push({ message: `User Order Quantity is greater than stocks of product. Your order will now be removed. Please order another one.` });
                                         user.userOrders.splice(userOrders.length - checkOutArrLength + i, 1);
                                         user.save().then(result => result).catch(err => err);
                                     }
                                 })
                                 .catch(err => err);
                         });
-                        return res.send({ message: "Checked out! But if there are errors please see errors.", errors: errors, response: true });
+                        return res.send({ message: "Checked out! But if there are errors please see errors.", response: true });
                     })
                     .catch(err => res.send({ message: "Error Checking out", error: err, response: false }));
             } else {
@@ -176,13 +182,11 @@ module.exports.checkOut = async (req, res) => {
             return res.send({ message: "User data not found in token", response: false });
         });
 }
-
 /*
  
     *****************          USER PROFILE CONTROLLERS             ************************
  
 */
-
 module.exports.getUserProfile = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findById(userData.id)

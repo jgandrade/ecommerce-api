@@ -7,5 +7,8 @@ router.get('/listAll', auth.authenticateToken, productControllers.getAllProducts
 router.get('/lists', productControllers.getActiveProducts);
 router.post('/add', auth.authenticateToken, productControllers.addProduct);
 router.delete('/remove', auth.authenticateToken, productControllers.forceRemoveProduct);
+router.get('/getproduct', auth.authenticateToken, productControllers.getSpecificProduct);
+router.patch('/update/price_stocks', auth.authenticateToken, productControllers.updateProductStocksPrice);
+router.patch('/update/name_description', auth.authenticateToken, productControllers.updateProductNameDescription);
 
 module.exports = router;

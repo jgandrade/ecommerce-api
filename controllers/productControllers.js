@@ -10,7 +10,7 @@ module.exports.getAllProducts = (req, res) => {
 
         Product.find({})
             .then(products => {
-                return res.send({ message: "Successfully retrieved products", products: products, response: true });
+                return res.send({ message: "Successfully retrieved products", data: products, response: true });
             })
             .catch(err => res.send({ message: err.message, response: false }));
     } else {
@@ -21,7 +21,7 @@ module.exports.getAllProducts = (req, res) => {
 module.exports.getActiveProducts = (req, res) => {
     Product.find({ productStocks: { $gte: 1 } })
         .then(products => {
-            return res.send({ message: "Successfully retrieved products", products: products, response: true });
+            return res.send({ message: "Successfully retrieved products", data: products, response: true });
         })
         .catch(err => res.send({ message: err.message, response: false }));
 }
@@ -57,6 +57,43 @@ module.exports.forceRemoveProduct = (req, res) => {
             .catch(err => res.send({ message: err.message, response: false }));
     }
     else {
+        return res.send({ message: "You are not authorized to apply this task", response: false });
+    }
+}
+
+module.exports.getSpecificProduct = (req, res) => {
+    Product.findById(req.body.productId)
+        .then(product => {
+            return res.send({ message: "Successfully retrieved product", data: product, response: true })
+        })
+}
+
+module.exports.updateProductStocksPrice = (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    if (userData.isAdmin) {
+        Product.findByIdAndUpdate(req.body.productId, { productStocks: req.body.productStocks, productPrice: req.body.productPrice }, { new: true })
+            .then(product => {
+                return res.send({ message: "Successfully updated product", data: product, response: true })
+            })
+            .catch(err => {
+                return res.send({ message: "Id not found or please check your syntax.", error: err, response: false })
+            })
+    } else {
+        return res.send({ message: "You are not authorized to apply this task", response: false });
+    }
+}
+
+module.exports.updateProductNameDescription = (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    if (userData.isAdmin) {
+        Product.findByIdAndUpdate(req.body.productId, { productName: req.body.productName, productDescription: req.body.productDescription }, { new: true })
+            .then(product => {
+                return res.send({ message: "Successfully updated product", data: product, response: true })
+            })
+            .catch(err => {
+                return res.send({ message: "Id not found or please check your syntax.", error: err, response: false })
+            })
+    } else {
         return res.send({ message: "You are not authorized to apply this task", response: false });
     }
 }
