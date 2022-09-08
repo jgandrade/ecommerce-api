@@ -28,16 +28,6 @@ module.exports.authenticateToken = (req, res, next) => {
     }
 }
 
-// REFRESH TOKEN DURING LOGGED-IN PHASE
-module.exports.generateAccessToken = user => {
-    const data = {
-        id: user._id,
-        emailAddress: user.emailAddress,
-        isAdmin: user.isAdmin
-    }
-    return jwt.sign(data, refreshSecret, {})
-}
-
 // DECODES TO USE PAYLOAD
 module.exports.decode = token => {
     if (token !== undefined) {

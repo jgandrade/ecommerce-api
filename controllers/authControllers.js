@@ -56,20 +56,3 @@ module.exports.login = (req, res) => {
         return res.send({ message: "Invalid Email Address Format", response: false });
     }
 }
-
-module.exports.logout = (req, res) => {
-    const userData = auth.decode(req.headers.authorization);
-
-}
-
-/*
-
-THINGS TO FINISH TOMORROW: 
-
-AUTHENTICATION
-LOGOUT
-ADDRESS
-CHANGE DEFAULT ADDRESS
-SEARCH ALGO FOR SEARCHING PRODUCTS
-
-*/

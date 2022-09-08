@@ -97,3 +97,46 @@ module.exports.updateProductNameDescription = (req, res) => {
         return res.send({ message: "You are not authorized to apply this task", response: false });
     }
 }
+
+module.exports.searchProduct = async (req, res) => {
+    let products = await Product.find({}).then(result => result).catch(err => err);
+    let productsMap = await Product.find({}).then(result => result).catch(err => err);
+    products = products.map(e => e.productName);
+
+    // CREATE A MAP FOR PRODUCT IDs
+    productsMap = productsMap.map((e, i) => ({ productId: e.id }));
+
+    //https://stackoverflow.com/questions/22876890/find-word-with-mistakes-in-string
+    function levenshteinDistance(s, t) {
+        if (!s.length) return t.length;
+        if (!t.length) return s.length;
+
+        return Math.min(
+            levenshteinDistance(s.substr(1), t) + 1,
+            levenshteinDistance(t.substr(1), s) + 1,
+            levenshteinDistance(s.substr(1), t.substr(1)) + (s.charAt(0).toLowerCase() !== t.charAt(0).toLowerCase() ? 1 : 0)
+        );
+    }
+
+    var candidateWord = req.params.product;
+    var words;
+    var results = []; // CONTAINER OF WORDS AND SCORE
+    for (var i = 0; i < products.length; i++) {
+        words = products[i].split(/[\s.,<>;:'"{}\[\]]+/);
+        for (var j = 0; j < words.length; j++) {
+            if (words[j]) {
+                results.push({ word: words[j], score: levenshteinDistance(words[j], candidateWord) });
+            }
+        }
+    }
+
+    // FILTER ALL PRODUCTS THAT HAS A DISTANCE LESS THAN 6
+    productsMap = productsMap.filter((e, i) => results[i].score <= 6);
+
+    let searchResults = [];
+    for (let i = 0; i < productsMap.length; i++) {
+        searchResults.push(await Product.findById({ _id: productsMap[i].productId }).then(results => results));
+    }
+
+    return res.send({ data: searchResults, response: true });
+}

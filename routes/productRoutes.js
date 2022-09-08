@@ -10,5 +10,6 @@ router.delete('/remove', auth.authenticateToken, productControllers.forceRemoveP
 router.get('/getproduct', auth.authenticateToken, productControllers.getSpecificProduct);
 router.patch('/update/price_stocks', auth.authenticateToken, productControllers.updateProductStocksPrice);
 router.patch('/update/name_description', auth.authenticateToken, productControllers.updateProductNameDescription);
+router.get('/search/:product', productControllers.searchProduct);
 
 module.exports = router;
