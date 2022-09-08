@@ -74,11 +74,28 @@ module.exports.addToCart = async (req, res) => {
         .catch(err => res.send({ message: "User ID Not Found", error: err, response: false }))
 }
 
+// MODIFY CART QUANTITY 
+/*
+
+    quantity: user_define_quantity
+    cartNumber: cartNumber_here
+
+*/
 module.exports.modifyCartQuantity = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     User.findById(userData.id)
-        .then(user => { 
-            
+        .then(user => {
+            user.userCart.forEach((e, i) => {
+                if (e.cartNumber === req.body.cartNumber) {
+                    let originalPrice = user.userCart[i].totalPrice / user.userCart[i].quantity;
+                    user.userCart[i].quantity = req.body.quantity;
+                    user.userCart[i].totalPrice = originalPrice * req.body.quantity;
+
+                    return user.save()
+                        .then(result => res.send({ message: "Updated", response: true }))
+                        .catch(err => res.send({ message: "Not Updated", response: false }));
+                }
+            });
         })
 }
 
@@ -117,11 +134,17 @@ module.exports.checkOut = async (req, res) => {
                     user.userCart.splice(cartIndexToRemove, 1); // DELETE FROM CART
                 })
 
+                let checkOutArrLength = toCheckOutArr.length;
+
                 user.save()
                     .then(result => {
                         let errors = [];
                         let userOrders = [...user.userOrders];
-                        userOrders.forEach((e, i) => {
+                        let newUserOrders = [];
+                        for (let i = userOrders.length - checkOutArrLength; i < userOrders.length; i++) {
+                            newUserOrders.push(userOrders[i]);
+                        }
+                        newUserOrders.forEach((e, i) => {
                             Product.findById(e.productId)
                                 .then(product => {
                                     if (product.productStocks >= e.quantity) {
@@ -137,14 +160,13 @@ module.exports.checkOut = async (req, res) => {
                                         product.save().then(result => result).catch(err => err);
                                     } else {
                                         errors.push({ message: `User Order Quantity of ${user.userOrders[i].quantity} is greater than stocks of product. Your order will now be deleted. Please order another one.` })
-                                        user.userOrders.splice(i, 1);
+                                        user.userOrders.splice(userOrders.length - checkOutArrLength + i, 1);
                                         user.save().then(result => result).catch(err => err);
                                     }
                                 })
                                 .catch(err => err);
                         });
-
-                        return res.send({ message: "Checkout Successful", errors: errors, response: true });
+                        return res.send({ message: "Checked out! But if there are errors please see errors.", errors: errors, response: true });
                     })
                     .catch(err => res.send({ message: "Error Checking out", error: err, response: false }));
             } else {
@@ -208,4 +230,8 @@ module.exports.changeNumber = (req, res) => {
         }
         )
         .catch(err => res.send({ message: 'Failed to Update Email', response: false }));
+}
+
+module.exports.addAddress = (req, res) => {
+
 }

@@ -59,6 +59,19 @@ module.exports.login = (req, res) => {
 
 module.exports.logout = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
-    console.log(userData);
-    return res.send("Logged Out");
+
 }
+
+/*
+
+THINGS TO FINISH TOMORROW: 
+
+AUTHENTICATION
+LOGOUT
+CHANGE PRODUCT NAME
+CHANGE PRODUCT DESCRIPTION
+RETRIEVE SINGLE PRODUCT
+ARCHIVE PRODUCT
+SEARCH ALGO FOR SEARCHING PRODUCTS
+
+*/
