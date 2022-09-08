@@ -7,52 +7,598 @@
 	},
 	"item": [
 		{
-			"name": "Login Request /login",
-			"request": {
-				"method": "POST",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "Logout Request /logout",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTdmN2Q0OGYyMThiNjI0MDY4ZmJjYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNTE4OTg4fQ.QphE5wglDI8mRY4MR2Ef8mbj-_pT3GjF3stfDoRspds",
-							"type": "string"
+			"name": "User Authentication Requests",
+			"item": [
+				{
+					"name": "Register Request /register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"John Glenn Andrade\",\r\n    \"emailAddress\":\"jgandrade@gmail.com\",\r\n    \"mobileNumber\":\"09112233447\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"register"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
+				{
+					"name": "Admin Login Request /login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"emailAddress\":\"admin@mail.com\",\r\n    \"password\":\"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "localhost:3000/logout",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"logout"
-					]
+				{
+					"name": "Not Admin Login Request /login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"emailAddress\": \"test@mail.com\",\r\n    \"password\":\"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout Request /logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTdmN2Q0OGYyMThiNjI0MDY4ZmJjYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNTE4OTg4fQ.QphE5wglDI8mRY4MR2Ef8mbj-_pT3GjF3stfDoRspds",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Register Request /register",
-			"request": {
-				"method": "POST",
-				"header": []
-			},
-			"response": []
+			"name": "User Profile Requests",
+			"item": [
+				{
+					"name": "Change Name",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5N2U4MmU3ZTY0NDg0MzZlZDZjNSIsImZ1bGxOYW1lIjoiRWxvbiBNdXNrMiIsImVtYWlsQWRkcmVzcyI6ImVsb25tdXNrMkBtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjI1NTYzNDd9.vHJIXGrPn-lmTATqkhxWtOOwNf6tzgFC5IKqpWP-T6g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Alan North\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/name/set",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"name",
+								"set"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5N2U4MmU3ZTY0NDg0MzZlZDZjNSIsImZ1bGxOYW1lIjoiRWxvbiBNdXNrMiIsImVtYWlsQWRkcmVzcyI6ImVsb25tdXNrMkBtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjI1NTYzNDd9.vHJIXGrPn-lmTATqkhxWtOOwNf6tzgFC5IKqpWP-T6g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"emailAddress\": \"christchanjessie@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/email/set",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"email",
+								"set"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5N2U4MmU3ZTY0NDg0MzZlZDZjNSIsImZ1bGxOYW1lIjoiRWxvbiBNdXNrMiIsImVtYWlsQWRkcmVzcyI6ImVsb25tdXNrMkBtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjI1NTYzNDd9.vHJIXGrPn-lmTATqkhxWtOOwNf6tzgFC5IKqpWP-T6g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/password/set",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"password",
+								"set"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Number",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5N2U4MmU3ZTY0NDg0MzZlZDZjNSIsImZ1bGxOYW1lIjoiRWxvbiBNdXNrMiIsImVtYWlsQWRkcmVzcyI6ImVsb25tdXNrMkBtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjI1NTYzNDd9.vHJIXGrPn-lmTATqkhxWtOOwNf6tzgFC5IKqpWP-T6g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mobileNumber\": \"11223344558\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/mobilenumber/set",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"mobilenumber",
+								"set"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Address",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NDVkMmU3ZTY0NDg0MzZlZDZiMiIsImZ1bGxOYW1lIjoiRWxvbiBNdXNrIiwiZW1haWxBZGRyZXNzIjoiZWxvbm11c2tAbWFpbC5jb20iLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjYyNTY2Mzg3fQ.O7wYEgjRPS-2NxO42B7w8m9bA4vlCwEX4DBVC257hvQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/profile",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTk4ZTcwNjAzODIxOGU0MTE1NzNmYyIsImZ1bGxOYW1lIjoiVGVzdCBOYW1lIiwiZW1haWxBZGRyZXNzIjoidGVzdEBtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjI2MTkyNTJ9.Zisw5BAoEIM9cAf17_6UfBMk4y_vdd0VD-yTyitB9CE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"street\": \"test2\",\r\n    \"city\": \"test\",\r\n    \"state\": \"test\",\r\n    \"zip\": 9999,\r\n    \"country\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/address/set",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"address",
+								"set"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Toggle User Admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTlhNTQ0OGYyMThiNjI0MDA1ZDZkZSIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNjI1MzA4fQ.q_L7La010zqVFejNhXGZyVruwmDi7R2t_S_wSP8WlIw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"6319a30a678ebf214ba4bc5c\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/toggleUserRole",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"toggleUserRole"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Cart Requests",
+			"item": [
+				{
+					"name": "Add To Cart /user/addToCart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NDVkMmU3ZTY0NDg0MzZlZDZiMiIsImZ1bGxOYW1lIjoiRWxvbiBNdXNrIiwiZW1haWxBZGRyZXNzIjoiZWxvbm11c2tAbWFpbC5jb20iLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjYyNjA1OTY0fQ.I_gNEhYL9Vn6q-iP_fWOfn4MzDG2kYN9aa5DmPAdrxo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\": \"631986179d79c7842273e9b3\",\r\n    \"quantity\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/addToCart",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"addToCart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Proceed To Checkout /user/checkout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTk4ZTcwNjAzODIxOGU0MTE1NzNmYyIsImZ1bGxOYW1lIjoiVGVzdCBOYW1lIiwiZW1haWxBZGRyZXNzIjoidGVzdEBtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjI2MTkyNTJ9.Zisw5BAoEIM9cAf17_6UfBMk4y_vdd0VD-yTyitB9CE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/checkout",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify Cart Quantity /user/cart/modifyQuantity",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTk4ZTcwNjAzODIxOGU0MTE1NzNmYyIsImZ1bGxOYW1lIjoiVGVzdCBOYW1lIiwiZW1haWxBZGRyZXNzIjoidGVzdEBtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjI2MTkyNTJ9.Zisw5BAoEIM9cAf17_6UfBMk4y_vdd0VD-yTyitB9CE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cartNumber\": \"811379\",\r\n    \"quantity\": 98\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/cart/updateQuantity",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"cart",
+								"updateQuantity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify Cart CheckOut /user/cart/updateCheckout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NDVkMmU3ZTY0NDg0MzZlZDZiMiIsImZ1bGxOYW1lIjoiRWxvbiBNdXNrIiwiZW1haWxBZGRyZXNzIjoiZWxvbm11c2tAbWFpbC5jb20iLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjYyNjEzMzY3fQ.HXhg45YrXVWKBf8KrFhjSXUtP6m8OCCuRA0lWjEMWHk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cartNumber\": \"873881\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/cart/updateCheckout",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"cart",
+								"updateCheckout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTk4ZTcwNjAzODIxOGU0MTE1NzNmYyIsImZ1bGxOYW1lIjoiVGVzdCBOYW1lIiwiZW1haWxBZGRyZXNzIjoidGVzdEBtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjI2MTkyNTJ9.Zisw5BAoEIM9cAf17_6UfBMk4y_vdd0VD-yTyitB9CE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cartNumber\": \"990857\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/cart/delete",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"cart",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

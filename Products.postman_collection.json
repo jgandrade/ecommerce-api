@@ -1,0 +1,287 @@
+{
+	"info": {
+		"_postman_id": "b54e4c7b-65d8-4bf2-9449-41f281612bdc",
+		"name": "Products",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19369115"
+	},
+	"item": [
+		{
+			"name": "Get All Products /product/listAll",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NzUxOGYyMThiNjI0MGExMWIxYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNTU2MDA3fQ.qQSYyfIEJf3XZtNN2IwRQnp4PkI0ktlXVwQo-9K1wp4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/product/listAll",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"product",
+						"listAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Active Products /product/lists",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NzUxOGYyMThiNjI0MGExMWIxYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNTU2MDA3fQ.qQSYyfIEJf3XZtNN2IwRQnp4PkI0ktlXVwQo-9K1wp4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/product/lists",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"product",
+						"lists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Product /product/add",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NzUxOGYyMThiNjI0MGExMWIxYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNTU2MDA3fQ.qQSYyfIEJf3XZtNN2IwRQnp4PkI0ktlXVwQo-9K1wp4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productName\": \"Notebook10\",\r\n    \"productDescription\": \"This is the Notebook you'll never lose because it syncs to the cloud and across your devices. It's always backed-up and always up to date.\",\r\n    \"productStocks\": 100,\r\n    \"productPrice\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/product/add",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"product",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Product /product/remove",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NzUxOGYyMThiNjI0MGExMWIxYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNTU2MDA3fQ.qQSYyfIEJf3XZtNN2IwRQnp4PkI0ktlXVwQo-9K1wp4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"_id\": \"6318979f2e7e6448436ed6c0\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/product/remove",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"product",
+						"remove"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specific Product /product/getproduct",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NDVkMmU3ZTY0NDg0MzZlZDZiMiIsImZ1bGxOYW1lIjoiRWxvbiBNdXNrIiwiZW1haWxBZGRyZXNzIjoiZWxvbm11c2tAbWFpbC5jb20iLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjYyNjEzMzY3fQ.HXhg45YrXVWKBf8KrFhjSXUtP6m8OCCuRA0lWjEMWHk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": \"6318978c2e7e6448436ed6bc\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/product/getproduct",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"product",
+						"getproduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product Price Stocks /product/update/price_stocks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NzUxOGYyMThiNjI0MGExMWIxYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNjE0NzYzfQ.CwDmRJ2WghlmnWwqqeG40kTEg4c-xeMAJFnBl04YKZQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": \"6318978c2e7e6448436ed6bc\",\r\n    \"productStocks\": 500,\r\n    \"productPrice\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/product/update/price_stocks",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"product",
+						"update",
+						"price_stocks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product Price Stocks /product/update/name_description",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NzUxOGYyMThiNjI0MGExMWIxYiIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNjE0NzYzfQ.CwDmRJ2WghlmnWwqqeG40kTEg4c-xeMAJFnBl04YKZQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": \"6318978c2e7e6448436ed6bc\",\r\n    \"productName\": \"THIS DATABASE IS GONNA BURN IN HELL\",\r\n    \"productDescription\": \"Lorem Ipsum nana jeiu jdishu\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/product/update/price_stocks",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"product",
+						"update",
+						"price_stocks"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
