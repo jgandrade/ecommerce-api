@@ -25,7 +25,6 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: new Date()
     },
-    authTokens: [],
     userCart: [
         {
             _id: false,
@@ -55,10 +54,6 @@ const UserSchema = new mongoose.Schema({
             totalPrice: {
                 type: Number,
                 required: [true, "Total Price is required"]
-            },
-            isReadyToCheckOut: {
-                type: Boolean,
-                default: true
             },
             addedOn: {
                 type: Date,
@@ -106,10 +101,6 @@ const UserSchema = new mongoose.Schema({
             }
         }
     ],
-    defaultAddress: {
-        type: Number,
-        default: 0
-    },
     addresses: [
         {
             _id: false,

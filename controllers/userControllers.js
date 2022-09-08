@@ -3,6 +3,7 @@ const User = require('../models/User');
 const stringMethods = require('./stringMethods');
 const bcrypt = require("bcrypt");
 const auth = require("../auth");
+const e = require('cors');
 
 /*
 
@@ -23,7 +24,7 @@ const auth = require("../auth");
 */
 module.exports.addToCart = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
-    // Check if there is a body 
+
     if (req.body.productId == null) {
         return res.send({ message: "Error Product Id not defined", response: false });
     }
@@ -31,7 +32,6 @@ module.exports.addToCart = async (req, res) => {
     let product = await Product.findById(req.body.productId)
         .then(result => result)
         .catch(err => res.send({ message: "No Product Id Found", error: err, response: false }));
-
 
     let cartData = {
         productId: product.id,
@@ -119,36 +119,6 @@ module.exports.modifyCartQuantity = async (req, res) => {
         })
 }
 
-/*MODIFY READY TO CHECKOUT CART
-    DESCRIPTION: Modify cart ready to check out to the opposite 
-    ROLES THAT CAN ACCESS: users
-    METHOD: patch
-    URI: user/cart/updateCheckout
-    BODY:
-        {
-            cartNumber: string,
-        }
-*/
-module.exports.modifyReadyToCheckOutCart = (req, res) => {
-    const userData = auth.decode(req.headers.authorization);
-    return User.findById(userData.id)
-        .then(user => {
-            user.userCart.forEach((e, i) => {
-                if (e.cartNumber === req.body.cartNumber) {
-                    user.userCart[i].isReadyToCheckOut = !user.userCart[i].isReadyToCheckOut;
-
-                    return user.save()
-                        .then(result => res.send({ message: "Updated", response: true }))
-                        .catch(err => res.send({ message: "Not Updated", response: false }));
-                } else {
-                    if (i === user.userCart.length - 1) {
-                        return res.send({ message: "Not Updated. Cart Number provided does not exist in the current user.", response: false })
-                    }
-                }
-            });
-        })
-}
-
 /*DELETE CART
     DESCRIPTION: Delete Cart
     ROLES THAT CAN ACCESS: users
@@ -189,93 +159,64 @@ module.exports.deleteCart = (req, res) => {
 */
 module.exports.checkOut = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
-    return User.findById(userData.id)
-        .then(user => {
-            let isAddressExist = user.addresses.length > 0;
-            let isCartNotEmpty = user.userCart.length > 0
 
-            if (isAddressExist && isCartNotEmpty) {
-                let address = user.addresses[user.defaultAddress];
+    let user = await User.findById(userData.id).then(results => results);
 
-                // STRINGIFY ADDRESS ARRAY OF OBJECTS INTO ONE
-                address = stringMethods.capitalizeName(`${address.street} ${address.city} ${address.state} ${address.zip} ${address.country}`);
+    let productIds = user.userCart.map(e => e.productId);
 
-                let toCheckOutArr = user.userCart.filter(e => e.isReadyToCheckOut === true);
-                toCheckOutArr.forEach(e => {
-                    user.userOrders.push({
-                        productId: e.productId,
-                        quantity: e.quantity,
-                        productName: e.productName,
-                        totalPrice: e.totalPrice,
-                        address: address
-                    });
+    let address;
+    if (user.addresses.length > 0) {
+        address = user.addresses[0];
+        address = stringMethods.capitalizeName(`${address.street} ${address.city} ${address.state} ${address.zip} ${address.country}`);
+    } else {
+        return res.send({ message: "Enter an address before doing checkout" });
+    }
 
-                    let cartNumber = e.cartNumber;
-                    let cartIndexToRemove; // GET THE INDEX TO BE DELETED IN CART
-                    user.userCart.forEach((el, index) => {
-                        if (el.cartNumber === cartNumber) {
-                            cartIndexToRemove = index;
-                        }
-                    });
-                    user.userCart.splice(cartIndexToRemove, 1); // DELETE FROM CART
+    let dataToPush = user.userCart.map(e => {
+        return {
+            productId: e.productId,
+            quantity: e.quantity,
+            productName: e.productName,
+            totalPrice: e.totalPrice,
+            address: address
+        }
+    });
 
-                })
+    dataToPush.forEach(e => {
+        user.userOrders.push(e);
+    })
 
-                let checkOutArrLength = toCheckOutArr.length;
+    let success = [];
+    let errors = [];
+    for (let i = 0; i < productIds.length; i++) {
+        let product = await Product.findById(productIds[i]).then(results => results);
 
-                user.save()
-                    .then(result => {
-                        let userOrders = [...user.userOrders];
-                        let newUserOrders = [];
-                        for (let i = userOrders.length - checkOutArrLength; i < userOrders.length; i++) {
-                            newUserOrders.push(userOrders[i]);
-                        }
-                        let errors = [];
-                        let success = [];
-                        console.log(newUserOrders)
-                        newUserOrders.forEach((e, i) => {
-                            Product.findById(e.productId)
-                                .then(product => {
-                                    if (product.productStocks >= e.quantity) {
-                                        product.productOrders.push({
-                                            orderId: e.orderId,
-                                            userId: userData.id,
-                                            quantity: e.quantity,
-                                            billingName: user.fullName,
-                                            billingAddress: address,
-                                            totalPrice: e.totalPrice
-                                        });
-                                        product.productStocks -= e.quantity;
-                                        product.save().then(result => result).catch(err => err);
-                                        success.push({ successOnProductId: e.productId });
+        let arrayToPushProduct = {
+            orderId: user.userOrders[i].orderId,
+            userId: userData.id,
+            quantity: user.userOrders[i].quantity,
+            billingName: user.fullName,
+            billingAddress: user.userOrders[i].address,
+            totalPrice: user.userOrders[i].totalPrice
+        };
 
-                                    } else {
-                                        user.userOrders.splice(userOrders.length - checkOutArrLength + i, 1);
-                                        errors.push({ errorOnProductId: e.productId });
-                                        user.save().then(result => result).catch(err => err);
-                                    }
+        if (product.productStocks >= user.userOrders[i].quantity) {
+            product.productStocks = product.productStocks - user.userOrders[i].quantity;
+            product.productOrders.push(arrayToPushProduct);
+            success.push({ cartNumberSuccessfullyOrdered: user.userCart[i].cartNumber })
+            user.userCart.shift();
+        } else {
+            errors.push({ message: "Change quantity of user cart. See cart details on next key.", cartNumber: user.userCart[i].cartNumber })
+            user.userOrders.splice(i, 1);
+            continue;
+        }
 
-                                    if (errors.length > 0 && success.length == 0) {
-                                        return res.send({ message: "Error placing order", errors: errors, response: false });
-                                    }
-                                    if (errors.length > 0 && success.length > 0) {
-                                        return res.send({ message: "Some had errors placing order", success: success, errors: errors, response: true });
-                                    }
-                                    if (errors.length == 0 && success.length > 0) {
-                                        return res.send({ message: "Successful Placing All Orders", response: true });
-                                    }
+        product.save().then(result => result);
+    }
 
-                                })
-                                .catch(err => err);
-                        });
-                    })
-                    .catch(err => res.send({ message: "Error Checking out", error: err, response: false }));
-            } else {
-                return res.send({ message: "Please add Address to your account or place a product on your Cart", error: { address: isAddressExist, cart: isCartNotEmpty }, response: false });
-            }
-        }).catch(err => {
-            return res.send({ message: "User data not found in token", response: false });
-        });
+    user.save().then(result => result);
+
+    return res.send({ success: success, errors: errors, response: true });
 }
 
 /*
