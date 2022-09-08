@@ -271,7 +271,6 @@ module.exports.changeName = (req, res) => {
         .catch(err => res.send({ message: 'Failed to Update Name', response: false }));
 }
 
-// IMPROVE ALGO OF THIS
 module.exports.changeEmail = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findByIdAndUpdate(userData.id, { emailAddress: req.body.emailAddress }, { new: true })
@@ -282,7 +281,6 @@ module.exports.changeEmail = (req, res) => {
         .catch(err => res.send({ message: 'Failed to Update Email', response: false }));
 }
 
-// IMPROVE ALGO OF THIS
 module.exports.changePassword = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findByIdAndUpdate(userData.id, { password: bcrypt.hashSync(req.body.password, 10) }, { new: true })
@@ -330,4 +328,19 @@ module.exports.updateAddress = (req, res) => {
         }
         )
         .catch(err => res.send({ message: 'Failed to Update', response: false }));
+}
+
+module.exports.toggleUserAdmin = (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    if (userData.isAdmin) {
+        return User.findById(req.body.userId)
+            .then(user => {
+                user.isAdmin = !user.isAdmin;
+                return user.save()
+                    .then(result => res.send({ message: "Updated", isAdmin: `${user.isAdmin}`, response: true }))
+                    .catch(err => res.send({ message: "Not Updated", response: false }));
+            })
+    } else {
+        return res.send({ message: "You are not allowed to do this task.", response: false })
+    }
 }
