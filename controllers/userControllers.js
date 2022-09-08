@@ -25,7 +25,8 @@ module.exports.addToCart = async (req, res) => {
 
     let product = await Product.findById(req.body.productId)
         .then(result => result)
-        .catch(err => ({ message: "No Product Id Found", error: err }));
+        .catch(err => res.send({ message: "No Product Id Found", error: err, response: false }));
+
 
     let cartData = {
         productId: product.id,
@@ -264,7 +265,31 @@ module.exports.changeNumber = (req, res) => {
         .catch(err => res.send({ message: 'Failed to Update Email', response: false }));
 }
 
-module.exports.addAddress = (req, res) => {
+module.exports.updateAddress = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
-
+    return User.findById(userData.id)
+        .then(user => {
+            
+            if (user.addresses.length > 0) {
+                user.addresses[0].street = stringMethods.capitalizeName(req.body.street);
+                user.addresses[0].city = stringMethods.capitalizeName(req.body.city);
+                user.addresses[0].state = stringMethods.capitalizeName(req.body.state);
+                user.addresses[0].zip = req.body.zip;
+                user.addresses[0].country = stringMethods.capitalizeName(req.body.country);
+                user.save().then(result => result).catch(err => res.send({ message: 'Not Updated', error: err, response: false }));
+                return res.send({ message: 'Updated', response: true });
+            } else {
+                user.addresses.push({
+                    street: stringMethods.capitalizeName(req.body.street),
+                    city: stringMethods.capitalizeName(req.body.city),
+                    state: stringMethods.capitalizeName(req.body.state),
+                    zip: req.body.zip,
+                    country: stringMethods.capitalizeName(req.body.country)
+                })
+                user.save().then(result => result).catch(err => res.send({ message: 'Not Updated', error: err, response: false }));
+                return res.send({ message: 'Updated', response: true });
+            }
+        }
+        )
+        .catch(err => res.send({ message: 'Failed to Update', response: false }));
 }

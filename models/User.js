@@ -120,23 +120,6 @@ const UserSchema = new mongoose.Schema({
             country: String,
         }
     ],
-    savedForLater: [
-        {
-            _id: false,
-            saveId: {
-                type: Number,
-                required: [true, "Save Id is required"]
-            },
-            productId: {
-                type: String,
-                required: [true, "Product ID required."]
-            },
-            savedOn: {
-                type: Date,
-                default: new Date()
-            }
-        }
-    ]
 });
 
 const User = new mongoose.model("User", UserSchema);

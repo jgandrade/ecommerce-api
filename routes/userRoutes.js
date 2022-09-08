@@ -12,5 +12,6 @@ router.post('/addToCart', auth.authenticateToken, userControllers.addToCart);
 router.post('/checkout', auth.authenticateToken, userControllers.checkOut);
 router.patch('/cart/updateQuantity', auth.authenticateToken, userControllers.modifyCartQuantity);
 router.patch('/cart/updateCheckout', auth.authenticateToken, userControllers.modifyReadyToCheckOutCart);
+router.patch('/address/set', auth.authenticateToken, userControllers.updateAddress);
 
 module.exports = router;
