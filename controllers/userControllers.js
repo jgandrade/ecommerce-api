@@ -9,12 +9,17 @@ const auth = require("../auth");
     *****************          USER CART PROFILE CONTROLLERS             ************************
 
 */
-// ADD TO CART 
-/*
-ADDS A PRODUCT TO USER CART
-body:
-    productId: productId_here
-    quantity:  user_define_quantity
+
+/*ADD TO CART
+    DESCRIPTION: Add to user cart 
+    ROLES THAT CAN ACCESS: users
+    METHOD: post
+    URI: user/addToCart
+    BODY:
+        {
+            productId: string,
+            quantity: number
+        }
 */
 module.exports.addToCart = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
@@ -81,12 +86,16 @@ module.exports.addToCart = async (req, res) => {
         .catch(err => res.send({ message: "User ID Not Found", error: err, response: false }))
 }
 
-// MODIFY CART QUANTITY 
-/*
-MODIFIES USER CART QUANTITY
-body:
-    quantity: user_define_quantity
-    cartNumber: cartNumber_here
+/*MODIFY CART QUANTITY
+    DESCRIPTION: Modify cart quantity and change price 
+    ROLES THAT CAN ACCESS: users
+    METHOD: patch
+    URI: user/cart/updateQuantity
+    BODY:
+        {
+            cartNumber: string,
+            quantity: number
+        }
 */
 module.exports.modifyCartQuantity = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
@@ -110,6 +119,16 @@ module.exports.modifyCartQuantity = async (req, res) => {
         })
 }
 
+/*MODIFY READY TO CHECKOUT CART
+    DESCRIPTION: Modify cart ready to check out to the opposite 
+    ROLES THAT CAN ACCESS: users
+    METHOD: patch
+    URI: user/cart/updateCheckout
+    BODY:
+        {
+            cartNumber: string,
+        }
+*/
 module.exports.modifyReadyToCheckOutCart = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findById(userData.id)
@@ -130,6 +149,16 @@ module.exports.modifyReadyToCheckOutCart = (req, res) => {
         })
 }
 
+/*DELETE CART
+    DESCRIPTION: Delete Cart
+    ROLES THAT CAN ACCESS: users
+    METHOD: delete
+    URI: user/cart/delete
+    BODY:
+        {
+            cartNumber: string,
+        }
+*/
 module.exports.deleteCart = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     User.findById(userData.id)
@@ -151,6 +180,13 @@ module.exports.deleteCart = (req, res) => {
         .catch(err => res.send({ message: err.message, response: false }));
 }
 
+/*Checkout from Cart
+    DESCRIPTION: Check out Cart that is ready for checkout
+    ROLES THAT CAN ACCESS: users
+    METHOD: post
+    URI: user/checkout
+    JUST CLICK 
+*/
 module.exports.checkOut = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findById(userData.id)
@@ -238,9 +274,6 @@ module.exports.checkOut = async (req, res) => {
                         });
                     })
                     .catch(err => res.send({ message: "Error Checking out", error: err, response: false }));
-
-
-
             } else {
                 return res.send({ message: "Please add Address to your account or place a product on your Cart", error: { address: isAddressExist, cart: isCartNotEmpty }, response: false });
             }
@@ -254,6 +287,13 @@ module.exports.checkOut = async (req, res) => {
     *****************          USER PROFILE CONTROLLERS             ************************
  
 */
+
+/*Get user profile 
+    DESCRIPTION: Get user profile 
+    ROLES THAT CAN ACCESS: users
+    METHOD: get
+    URI: user/profile
+*/
 module.exports.getUserProfile = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findById(userData.id)
@@ -261,6 +301,16 @@ module.exports.getUserProfile = (req, res) => {
         .catch(err => res.send({ message: "User Data not acquired in Token", response: false, error: err.message }));
 }
 
+/*CHANGE NAME 
+    DESCRIPTION: Change user name
+    ROLES THAT CAN ACCESS: users
+    METHOD: patch
+    URI: user/name/set
+    BODY:
+        {
+            fullName: string,
+        }
+*/
 module.exports.changeName = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findByIdAndUpdate(userData.id, { fullName: stringMethods.capitalizeName(req.body.fullName) }, { new: true })
@@ -271,6 +321,17 @@ module.exports.changeName = (req, res) => {
         .catch(err => res.send({ message: 'Failed to Update Name', response: false }));
 }
 
+
+/*CHANGE EMAIL 
+    DESCRIPTION: Change email
+    ROLES THAT CAN ACCESS: users
+    METHOD: patch
+    URI: user/email/set
+    BODY:
+        {
+            emailAddress: string,
+        }
+*/
 module.exports.changeEmail = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findByIdAndUpdate(userData.id, { emailAddress: req.body.emailAddress }, { new: true })
@@ -281,6 +342,17 @@ module.exports.changeEmail = (req, res) => {
         .catch(err => res.send({ message: 'Failed to Update Email', response: false }));
 }
 
+
+/*CHANGE PASSWORD
+    DESCRIPTION: Change password
+    ROLES THAT CAN ACCESS: users
+    METHOD: patch
+    URI: user/password/set
+    BODY:
+        {
+            password: string,
+        }
+*/
 module.exports.changePassword = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findByIdAndUpdate(userData.id, { password: bcrypt.hashSync(req.body.password, 10) }, { new: true })
@@ -291,6 +363,17 @@ module.exports.changePassword = (req, res) => {
         .catch(err => res.send({ message: 'Failed to Update Password', response: false }));
 }
 
+
+/*CHANGE NUMBER
+    DESCRIPTION: Change number
+    ROLES THAT CAN ACCESS: users
+    METHOD: patch
+    URI: user/mobilenumber/set
+    BODY:
+        {
+            mobileNumber: string,
+        }
+*/
 module.exports.changeNumber = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findByIdAndUpdate(userData.id, { mobileNumber: req.body.mobileNumber }, { new: true })
@@ -301,6 +384,20 @@ module.exports.changeNumber = (req, res) => {
         .catch(err => res.send({ message: 'Failed to Update Email', response: false }));
 }
 
+/*CHANGE ADDRESS OR UPDATE
+    DESCRIPTION: Change number
+    ROLES THAT CAN ACCESS: users
+    METHOD: patch
+    URI: user/mobilenumber/set
+    BODY:
+        {
+            street: string ,
+            city: string,
+            state: string,
+            zip: number,
+            country: string
+        }
+*/
 module.exports.updateAddress = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findById(userData.id)
@@ -330,6 +427,12 @@ module.exports.updateAddress = (req, res) => {
         .catch(err => res.send({ message: 'Failed to Update', response: false }));
 }
 
+/*TOGGLE USER ADMIN
+    DESCRIPTION: Toggle Admin to true or false
+    ROLES THAT CAN ACCESS: users and admin
+    METHOD: patch
+    URI: user/toggleUserRole
+*/
 module.exports.toggleUserAdmin = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     if (userData.isAdmin) {
