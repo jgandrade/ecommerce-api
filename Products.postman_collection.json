@@ -105,7 +105,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"productName\": \"Notebook10\",\r\n    \"productDescription\": \"This is the Notebook you'll never lose because it syncs to the cloud and across your devices. It's always backed-up and always up to date.\",\r\n    \"productStocks\": 100,\r\n    \"productPrice\": 10\r\n}",
+					"raw": "{\r\n    \"productName\": \"Asus ROG Laptop\",\r\n    \"productDescription\": \"This is the Notebook you'll never lose because it syncs to the cloud and across your devices. It's always backed-up and always up to date.\",\r\n    \"productStocks\": 100,\r\n    \"productPrice\": 10\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -288,6 +288,44 @@
 			"request": {
 				"method": "GET",
 				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Archive Product",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMWE1MjcyY2JhZDRkZmUwOThjZWEzMCIsImVtYWlsQWRkcmVzcyI6ImFkbWluQG1haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjYyNjg5MjEzfQ.ofsejNpWz1x_sK1HbMtw6F_gv7jyWErmW7u0J9jfbXw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": \"631a6145e196ec142d9e3f3d\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/product/archiveProduct",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"product",
+						"archiveProduct"
+					]
+				}
 			},
 			"response": []
 		}

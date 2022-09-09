@@ -252,17 +252,6 @@
 					"response": []
 				},
 				{
-					"name": "Add Address",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get User Profile",
 					"request": {
 						"auth": {
@@ -489,45 +478,6 @@
 					"response": []
 				},
 				{
-					"name": "Modify Cart isReadyForCheckOut",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTg5NDVkMmU3ZTY0NDg0MzZlZDZiMiIsImZ1bGxOYW1lIjoiRWxvbiBNdXNrIiwiZW1haWxBZGRyZXNzIjoiZWxvbm11c2tAbWFpbC5jb20iLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjYyNjEzMzY3fQ.HXhg45YrXVWKBf8KrFhjSXUtP6m8OCCuRA0lWjEMWHk",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"cartNumber\": \"873881\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/user/cart/updateCheckout",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"user",
-								"cart",
-								"updateCheckout"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Delete Specific Cart",
 					"request": {
 						"auth": {
@@ -563,6 +513,43 @@
 								"delete"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Orders Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMWE1MmQ1M2QzYzk2Zjg3NDEyZDIwMCIsImZ1bGxOYW1lIjoiSm9obiBHbGVubiBBbmRyYWRlIiwiZW1haWxBZGRyZXNzIjoiamdhbmRyYWRlQGdtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjI2ODI1Nzh9.ldPr-edK5OOnL5e6CHYFEqiqfrk9kaKe4cuiTj8tC_k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/getUserOrders",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"getUserOrders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Cart Copy",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
