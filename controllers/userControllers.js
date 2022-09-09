@@ -150,7 +150,13 @@ module.exports.deleteCart = (req, res) => {
         .catch(err => res.send({ message: err.message, response: false }));
 }
 
-
+/*Get User Cart
+    DESCRIPTION: Get User Cart
+    ROLES THAT CAN ACCESS: users
+    METHOD: get
+    URI: user/getUserCart
+    JUST CLICK 
+*/
 module.exports.getUserCart = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findById(userData.id)
@@ -158,6 +164,13 @@ module.exports.getUserCart = (req, res) => {
         .catch(err => res.send({ message: "User Data not acquired in Token", response: false, error: err.message }));
 }
 
+/*Get User Orders
+    DESCRIPTION: Get User orders
+    ROLES THAT CAN ACCESS: users
+    METHOD: get
+    URI: user/getUserOrders
+    JUST CLICK 
+*/
 module.exports.getUserOrders = (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     return User.findById(userData.id)
