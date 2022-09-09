@@ -11,5 +11,6 @@ router.get('/getproduct', auth.authenticateToken, productControllers.getSpecific
 router.patch('/update/price_stocks', auth.authenticateToken, productControllers.updateProductStocksPrice);
 router.patch('/update/name_description', auth.authenticateToken, productControllers.updateProductNameDescription);
 router.get('/search/:product', productControllers.searchProduct);
+router.patch('/archiveProduct', productControllers.archiveProduct);
 
 module.exports = router;

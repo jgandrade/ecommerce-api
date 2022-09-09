@@ -38,7 +38,7 @@ module.exports.getAllProducts = (req, res) => {
         }
 */
 module.exports.getActiveProducts = (req, res) => {
-    Product.find({ productStocks: { $gte: 1 } })
+    Product.find({ $and: [{ productStocks: { $gte: 1 } }, { isArchived: false }]})
         .then(products => {
             return res.send({ message: "Successfully retrieved products", data: products, response: true });
         })
@@ -185,10 +185,10 @@ module.exports.searchProduct = async (req, res) => {
     let products = await Product.find({}).then(result => result).catch(err => err);
     let productsMap = await Product.find({}).then(result => result).catch(err => err);
     products = products.map(e => e.productName.split(" ").join("").toLowerCase());
-    
+
     // REMOVE SPACES 
     req.params.product = req.params.product.replace(/\s/g, '');
-    
+
     // CREATE A MAP FOR PRODUCT IDs
     productsMap = productsMap.map((e, i) => ({ productId: e.id }));
 
@@ -228,4 +228,20 @@ module.exports.searchProduct = async (req, res) => {
     searchResults = searchResults.map(e => ({ productName: e.productName, productDescription: e.productDescription, productStocks: e.productStocks, productPrice: e.productPrice }));
 
     return res.send({ data: searchResults, response: true });
+}
+
+
+module.exports.archiveProduct = async (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    if (userData.isAdmin) {
+        return Product.findById(req.body.productId)
+            .then(product => {
+                product.isArchived = !product.isArchived;
+                return product.save()
+                    .then(result => res.send({ message: "Updated", isArchived: `${product.isArchived}`, response: true }))
+                    .catch(err => res.send({ message: "Not Updated", response: false }));
+            })
+    } else {
+        return res.send({ message: "You are not allowed to do this task.", response: false })
+    }
 }

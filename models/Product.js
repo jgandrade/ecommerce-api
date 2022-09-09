@@ -21,6 +21,10 @@ const ProductSchema = new mongoose.Schema({
         type: Date,
         default: new Date()
     },
+    isArchived:{
+        type: Boolean,
+        default: false
+    },
     productOrders: [{
         _id: false,
         orderId: {
