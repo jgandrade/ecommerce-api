@@ -162,7 +162,7 @@ module.exports.checkOut = async (req, res) => {
 
     let user = await User.findById(userData.id).then(results => results);
 
-    let productIds = user.userCart.map(e => e.productId);
+    let productIds = user.userCart.map(e => e.productId).reverse();
 
     if (user.userCart.length == 0) {
         return res.send({ message: "Add something on your cart to checkout" });
@@ -193,7 +193,7 @@ module.exports.checkOut = async (req, res) => {
     let success = [];
     let errors = [];
 
-    for (let i = 0; i < productIds.length; i++) {
+    for (let i = productIds.length-1; i >= 0; i--) {
         let product = await Product.findById(productIds[i]).then(results => results);
 
         let arrayToPushProduct = {
