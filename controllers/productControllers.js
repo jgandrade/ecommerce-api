@@ -230,7 +230,16 @@ module.exports.searchProduct = async (req, res) => {
     return res.send({ data: searchResults, response: true });
 }
 
-
+/*ARCHIVE PRODUCT
+    DESCRIPTION: Search product using levenshtein distance algorithm
+    ROLES THAT CAN ACCESS: admin
+    METHOD: patch
+    URI: product/archiveProduct
+    BODY: 
+    {
+        productId: string    
+    }
+*/
 module.exports.archiveProduct = async (req, res) => {
     const userData = auth.decode(req.headers.authorization);
     if (userData.isAdmin) {
