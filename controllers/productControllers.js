@@ -184,11 +184,11 @@ module.exports.updateProductNameDescription = (req, res) => {
 module.exports.searchProduct = async (req, res) => {
     let products = await Product.find({}).then(result => result).catch(err => err);
     let productsMap = await Product.find({}).then(result => result).catch(err => err);
-    products = products.map(e => e.productName);
-
+    products = products.map(e => e.productName.split(" ").join("").toLowerCase());
+    
     // REMOVE SPACES 
     req.params.product = req.params.product.replace(/\s/g, '');
-
+    
     // CREATE A MAP FOR PRODUCT IDs
     productsMap = productsMap.map((e, i) => ({ productId: e.id }));
 
@@ -218,7 +218,7 @@ module.exports.searchProduct = async (req, res) => {
 
 
     // FILTER ALL PRODUCTS THAT HAS A DISTANCE LESS THAN 6
-    productsMap = productsMap.filter((e, i) => results[i].score <= 5);
+    productsMap = productsMap.filter((e, i) => results[i].score <= 3);
 
     let searchResults = [];
     for (let i = 0; i < productsMap.length; i++) {
