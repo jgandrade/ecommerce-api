@@ -150,6 +150,22 @@ module.exports.deleteCart = (req, res) => {
         .catch(err => res.send({ message: err.message, response: false }));
 }
 
+
+module.exports.getUserCart = (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    return User.findById(userData.id)
+        .then(user => res.send({ userCart: user.userCart, response: true, message: "Cart retrieved" }))
+        .catch(err => res.send({ message: "User Data not acquired in Token", response: false, error: err.message }));
+}
+
+module.exports.getUserOrders = (req, res) => {
+    const userData = auth.decode(req.headers.authorization);
+    return User.findById(userData.id)
+        .then(user => res.send({ userOrders: user.userOrders, response: true, message: "Orders retrieved" }))
+        .catch(err => res.send({ message: "User Data not acquired in Token", response: false, error: err.message }));
+}
+
+
 /*Checkout from Cart
     DESCRIPTION: Check out Cart that is ready for checkout
     ROLES THAT CAN ACCESS: users

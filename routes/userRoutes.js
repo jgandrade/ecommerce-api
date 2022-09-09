@@ -14,5 +14,7 @@ router.patch('/cart/updateQuantity', auth.authenticateToken, userControllers.mod
 router.delete('/cart/delete', auth.authenticateToken, userControllers.deleteCart);
 router.patch('/address/set', auth.authenticateToken, userControllers.updateAddress);
 router.patch('/toggleUserRole', auth.authenticateToken, userControllers.toggleUserAdmin);
+router.get('/getUserCart', auth.authenticateToken, userControllers.getUserCart);
+router.get('/getUserOrders', auth.authenticateToken, userControllers.getUserOrders);
 
 module.exports = router;
